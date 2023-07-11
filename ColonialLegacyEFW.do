@@ -68,12 +68,71 @@ eststo:reg efw time_total  i.colonizer  america africa asia
 eststo:reg efw time_total  i.colonizer if rich4!=1
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw time_total  i.colonizer  lat_abst landlock
+eststo:reg efw time_total  i.colonizer  lat_abst landlock island
 
 *---Column 8: Controlling for climate 
 eststo: reg efw time_total  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
 
+test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+
 *---Column 9: Controlling for natural resources 
 eststo: reg efw time_total i.colonizer  goldm iron silv zinc oilres
 
-C
+test goldm = iron =  silv = zinc = oilres = 0
+
+esttab using "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+eststo clear
+
+*---Column 1: Base Sample	
+eststo:reg efw_indep time_total if diff<10
+
+*---Column 2: Identity of Colonizer
+eststo:reg efw_indep time_total i.colonizer if diff<10
+
+*---Column 2: No Africa
+eststo:reg efw_indep time_total i.colonizer if africa!=1 & diff<10
+	
+*---Column 3: No Americas
+eststo:reg efw_indep time_total  i.colonizer if america!=1 & diff<10
+
+*---Column 5: With continent dummies
+eststo:reg efw_indep time_total  i.colonizer  america africa asia if diff<10
+
+*---Column 6: Controlling for Gap
+eststo:reg efw_indep time_total  i.colonizer year_independence if diff<10
+
+*---Column 7: Controlling for latitude 
+eststo:reg efw_indep time_total  i.colonizer  lat_abst landlock island if diff<10
+
+*---Column 8: Controlling for climate 
+eststo: reg efw_indep time_total  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint if diff<10
+
+test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+
+*---Column 9: Controlling for natural resources 
+eststo: reg efw_indep time_total i.colonizer  goldm iron silv zinc oilres if diff<10
+
+test goldm = iron =  silv = zinc = oilres = 0
+
+esttab using "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2
+
+
+
+eststo clear
+
+*---Table 4 - By Area of EFW
+eststo: reg Area1 time_total i.colonizer 
+eststo: reg Area2 time_total i.colonizer 
+eststo: reg Area3 time_total i.colonizer 
+eststo: reg Area4 time_total i.colonizer 
+eststo: reg Area5 time_total i.colonizer 
+eststo: reg std time_total i.colonizer 
+
+
+
+
+
+
+
