@@ -47,27 +47,33 @@ foreach k in britain france spain {
 	reg efw time_`k' if col_`k'==1
 }
 
+eststo clear
 
 *---Column 1: Base Sample	
-reg efw time_total 
+eststo:reg efw time_total 
+
+*---Column 2: Identity of Colonizer
+eststo:reg efw time_total i.colonizer 
 
 *---Column 2: No Africa
-reg efw time_total i.colonizer if africa!=1
+eststo:reg efw time_total i.colonizer if africa!=1
 	
 *---Column 3: No Americas
-reg efw time_total  i.colonizer if america!=1
-	
-*---Column 4: Just Americas
-reg efw time_total  i.colonizer if america==1
+eststo:reg efw time_total  i.colonizer if america!=1
 
 *---Column 5: With continent dummies
-reg efw time_total  i.colonizer  america africa asia
+eststo:reg efw time_total  i.colonizer  america africa asia
 
 *---Column 6: Without neo-Europes
-reg efw time_total  i.colonizer if rich4!=1
+eststo:reg efw time_total  i.colonizer if rich4!=1
 
 *---Column 7: Controlling for latitude 
-reg efw time_total   i.colonizer  lat_abst
+eststo:reg efw time_total  i.colonizer  lat_abst landlock
 
 *---Column 8: Controlling for climate 
-reg efw time_total   i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
+eststo: reg efw time_total  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
+
+*---Column 9: Controlling for natural resources 
+eststo: reg efw time_total i.colonizer  goldm iron silv zinc oilres
+
+C
