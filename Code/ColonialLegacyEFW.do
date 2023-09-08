@@ -1,8 +1,15 @@
+* Mac Office
 import excel "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/colonies.xlsx", sheet("Sheet1") firstrow clear
 
 merge 1:1 country_code using "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/AJRRevFortune.dta"
 
-drop Year ISO_Code_2 Countries ISO_Code_3 closest
+
+* Macbook Air
+import excel "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/colonies.xlsx", sheet("Sheet1") firstrow clear
+
+merge 1:1 country_code using "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/AJRRevFortune.dta"
+
+drop _merge Year ISO_Code_2 Countries ISO_Code_3 closest
 
 rename independence year_independence
 rename time_indep time_indep_interim
@@ -41,6 +48,8 @@ foreach k in belgium britain france germany italy netherlands portugal spain {
 	replace `k' = 1 if time_`k' > 0
 	drop if time_`k' < 0
 }
+
+save "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/ColonialEFW.dta"
 
 
 foreach k in britain france spain {
