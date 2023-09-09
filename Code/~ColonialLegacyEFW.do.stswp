@@ -6,7 +6,7 @@ local path "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Pe
 * Macbook Air
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 
-import excel "`path'/colonies.xlsx", sheet("Sheet1") firstrow clear
+import excel "`path'/Data/colonies.xlsx", sheet("Sheet1") firstrow clear
 
 merge 1:1 country_code using "`path'/Data/AJRRevFortune.dta"
 
@@ -54,6 +54,9 @@ foreach k in belgium britain france germany italy netherlands portugal spain {
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 save "`path'/Data/ColonialEFW.dta", replace
 
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+use "`path'/Data/ColonialEFW.dta"
 
 foreach k in britain france spain {
 	reg efw time_`k' if col_`k'==1
@@ -129,7 +132,8 @@ eststo: reg efw_indep time_total i.colonizer  goldm iron silv zinc oilres if dif
 
 test goldm = iron =  silv = zinc = oilres = 0
 
-esttab using "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 
