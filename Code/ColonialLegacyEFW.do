@@ -6,7 +6,7 @@ local path "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Pe
 * Macbook Air
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 
-import excel "`path'/colonies.xlsx", sheet("Sheet1") firstrow clear
+import excel "`path'/Data/colonies.xlsx", sheet("Sheet1") firstrow clear
 
 merge 1:1 country_code using "`path'/Data/AJRRevFortune.dta"
 
@@ -31,6 +31,21 @@ drop colonizer
 encode main, gen(colonizer)
 
 /*
+replace africa=1 if country=="Democratic Republic of the Congo" ///
+		| country=="Equatorial Guinea" | country=="S�o Tom� e Pr�ncipe" ///
+		| country=="Seychelles"
+
+replace asia=1 if country=="Brunei Darussalam" | country=="Cambodia" ///
+				| country=="Thailand" | country=="Timor-Leste" | country == "Cyprus" ///
+				| (miss==1 & WorldBankRegion=="Middle East & North Africa") ///
+				| country == "Bhutan"
+				
+replace america=1 if country=="Antigua and Barbuda"
+
+foreach k in africa america asia{
+	replace `k'=0 if `k'==.
+}
+	
 gen main_colonizer = ""
 replace main_colonizer = "Netherlands" if time_netherlands==1 & ncolonizers==1
 replace main_colonizer = "Belgium" if col_belgium == 1 & ncolonizers==1
@@ -50,14 +65,18 @@ foreach k in belgium britain france germany italy netherlands portugal spain {
 	drop if time_`k' < 0
 }
 
+foreach k in britain france spain {
+	reg efw time_`k' if col_`k'==1
+}
+
 * Macbook Air
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 save "`path'/Data/ColonialEFW.dta", replace
 
 
-foreach k in britain france spain {
-	reg efw time_`k' if col_`k'==1
-}
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+use "`path'/Data/ColonialEFW.dta"
+
 
 eststo clear
 
@@ -129,7 +148,8 @@ eststo: reg efw_indep time_total i.colonizer  goldm iron silv zinc oilres if dif
 
 test goldm = iron =  silv = zinc = oilres = 0
 
-esttab using "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 
