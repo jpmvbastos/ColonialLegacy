@@ -191,12 +191,7 @@ esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) 
 * Summary Statistics (Table A1)
 
 bysort colonizer: sum time_total year_independence efw 
-
-forvalues i = 1/8 { 
-	bysort continent: sum time_total year_independence efw if efw!=. & colonizer==`i'
-}
 sum time_total year_independence efw if efw!=.
-
 
 eststo clear
 
