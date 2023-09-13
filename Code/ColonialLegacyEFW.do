@@ -11,26 +11,26 @@ import excel "`path'/Data/colonies.xlsx", sheet("Sheet1") firstrow clear
 merge 1:1 country_code using "`path'/Data/AJRRevFortune.dta"
 
 drop _merge Year ISO_Code_2 Countries ISO_Code_3 closest
+drop if _n>128
 
 rename independence year_independence
 rename time_indep time_indep_interim
 gen time_indep = 2000-year_independence
+gen lag_efw = efw_year - year_independence
 
+gen centuries = time_total/100
 
 gen diff = efw_year - year_independence
 gen delta_efw = efw_2019 - efw_indep
 
 replace simultaneous = 0 if simultaneous ==.
-
 replace time_total = time_total - simultaneous
 
-gen multiple = 0
-replace multiple = 1 if ncolonizers > 1
 
-drop colonizer
-encode main, gen(colonizer)
+* Adjusting missing continents 
 
-/*
+gen miss=1 if  asia!=1 & america!=1  & africa!=1
+
 replace africa=1 if country=="Democratic Republic of the Congo" ///
 		| country=="Equatorial Guinea" | country=="S�o Tom� e Pr�ncipe" ///
 		| country=="Seychelles"
@@ -42,6 +42,12 @@ replace asia=1 if country=="Brunei Darussalam" | country=="Cambodia" ///
 				
 replace america=1 if country=="Antigua and Barbuda"
 
+replace island=1 if country=="Bahrain" | country=="Cyprus" | ///
+		country=="Seychelles" | country=="Timor-Leste"
+		
+replace island=0 if island==.
+
+
 foreach k in africa america asia{
 	replace `k'=0 if `k'==.
 }
@@ -52,32 +58,40 @@ replace continent = "America" if america==1
 replace continent = "Asia" if asia==1
 replace continent = "Oceania" if africa!=1 & america!=1 & asia!=1
 
-replace main="Britain" if country=="Canada"
-replace colonizer=2 if country=="Canada"
-	
-gen main_colonizer = ""
-replace main_colonizer = "Netherlands" if time_netherlands==1 & ncolonizers==1
-replace main_colonizer = "Belgium" if col_belgium == 1 & ncolonizers==1
-replace main_colonizer = "Italy" if col_italy == 1 & ncolonizers==1
-replace main_colonizer = "Britain" if col_britain == 1 & ncolonizers==1
-replace main_colonizer = "Portugal" if col_portugal == 1 & ncolonizers==1
-replace main_colonizer = "Spain" if col_spain == 1 & ncolonizers==1
-replace main_colonizer = "Germany" if col_germany == 1 & ncolonizers==1
-replace main_colonizer = "France" if col_france==1  & ncolonizers==1
+gen multiple = 0
+replace multiple = 1 if ncolonizers > 1
 
+drop colonizer
+encode main, gen(long_colonizer) /* Longest */
+encode main, gen(colonizer) 
+
+drop if efw==.
+
+/*
+1 = Belgium
+2 = Britain
+3 = France
+4 = Germany
+5 = Italy
+6 = Netherlands
+7 = Portugal
+8 = Spain
 */
 
-foreach k in belgium britain france germany italy netherlands portugal spain {
-	
-	gen `k' = 0
-	replace `k' = 1 if time_`k' > 0
-	drop if time_`k' < 0
-}
+* Adjustment of main colonizer following Acemoglu et al. (2001, 2002)
+*replace colonizer=1 if f_belg==1
+replace colonizer=2 if f_belg==0 & f_french==0 & f_germ==0 & f_italy==0 ///
+		& f_dutch==0 & f_pothco==0 & f_spain==0
+replace colonizer=3 if f_french==1
+replace colonizer=4 if f_germ==1
+replace colonizer=5 if f_italy==1
+replace colonizer=6 if f_dutch==1
+replace colonizer=7 if f_pothco==1
+replace colonizer=8 if f_spain==1
 
-foreach k in britain france spain {
-	reg efw time_`k' if col_`k'==1
-}
-
+* Errors in Acemoglu (coded as Portuguese)
+replace colonizer=6 if country=="Suriname"
+replace colonizer=8 if country=="Philippines"
 
 
 * Macbook Air
@@ -91,91 +105,79 @@ use "`path'/Data/ColonialEFW.dta"
 
 * Summary Statistics (Table 1)
 
-sum time_total year_independence efw efw_std efw_2019 delta_efw if efw!=.
-bysort continent: sum time_total year_independence efw efw_std efw_2019 delta_efw if efw!=.
-
-* Summary Statistics (Table 2)
-
-bysort colonizer: sum time_total year_independence efw if efw!=.
-tab colonizer if efw!=.
-
-forvalues i = 1/8 { 
-	bysort continent: sum time_total year_independence efw if efw!=. & colonizer==`i'
-}
-sum time_total year_independence efw if efw!=.
+sum time_total year_independence efw efw_std efw_2019 delta_efw 
+sum time_total year_independence efw efw_std efw_2019 delta_efw if late==1
 
 
-
-
-
-
+* Main Results (Table 2)
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw time_total 
+eststo:reg efw centuries 
 
 *---Column 2: Identity of Colonizer
-eststo: reg efw time_total i.colonizer
+eststo: reg efw centuries i.colonizer
 
 *---Column 2: No Africa
-eststo:reg efw time_total i.colonizer if africa!=1
+eststo:reg efw centuries i.colonizer if africa!=1
 	
 *---Column 3: No Americas
-eststo:reg efw time_total  i.colonizer if america!=1
+eststo:reg efw centuries  i.colonizer if america!=1
 
 *---Column 5: With continent dummies
-eststo:reg efw time_total  i.colonizer  america africa asia
+eststo:reg efw centuries  i.colonizer  america africa asia
 
 *---Column 6: Without neo-Europes
-eststo:reg efw time_total  i.colonizer if rich4!=1
+eststo:reg efw centuries  i.colonizer if rich4!=1
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw time_total  i.colonizer  lat_abst landlock island
+eststo:reg efw centuries  i.colonizer  lat_abst landlock island
 
 *---Column 8: Controlling for climate 
-eststo: reg efw time_total  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
+eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
 
 test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw time_total i.colonizer  goldm iron silv zinc oilres
+eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres
 
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
+* LATE INDEPENDENCY SAMPLE (late==1)
 
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw_indep time_total if diff<10
+eststo:reg efw_indep centuries if late==1
 
 *---Column 2: Identity of Colonizer
-eststo:reg efw_indep time_total i.colonizer if diff<10
+eststo:reg efw_indep centuries i.colonizer if late==1
 
 *---Column 2: No Africa
-eststo:reg efw_indep time_total i.colonizer if africa!=1 & diff<10
+eststo:reg efw_indep centuries i.colonizer if africa!=1 & late==1
 	
 *---Column 3: No Americas
-eststo:reg efw_indep time_total  i.colonizer if america!=1 & diff<10
+eststo:reg efw_indep centuries  i.colonizer if america!=1 & late==1
 
 *---Column 5: With continent dummies
-eststo:reg efw_indep time_total  i.colonizer  america africa asia if diff<10
+eststo:reg efw_indep centuries  i.colonizer  america africa asia if late==1
 
 *---Column 6: Controlling for Gap
-eststo:reg efw_indep time_total  i.colonizer year_independence if diff<10
+eststo:reg efw_indep centuries  i.colonizer year_independence if late==1
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw_indep time_total  i.colonizer  lat_abst landlock island if diff<10
+eststo:reg efw_indep centuries  i.colonizer  lat_abst landlock island if late==1
 
 *---Column 8: Controlling for climate 
-eststo: reg efw_indep time_total  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint if diff<10
+eststo: reg efw_indep centuries  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint if late==1
 
 test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw_indep time_total i.colonizer  goldm iron silv zinc oilres if diff<10
+eststo: reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if diff<10
 
 test goldm = iron =  silv = zinc = oilres = 0
 
@@ -183,19 +185,37 @@ local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
+******* APPENDIX A ****** 
+**** Data Description ***
+
+* Summary Statistics (Table A1)
+
+bysort colonizer: sum time_total year_independence efw 
+
+forvalues i = 1/8 { 
+	bysort continent: sum time_total year_independence efw if efw!=. & colonizer==`i'
+}
+sum time_total year_independence efw if efw!=.
+
 
 eststo clear
 
 *---Table 4 - By Area of EFW
-eststo: reg Area1 time_total i.colonizer 
-eststo: reg Area2 time_total i.colonizer 
-eststo: reg Area3 time_total i.colonizer 
-eststo: reg Area4 time_total i.colonizer 
-eststo: reg Area5 time_total i.colonizer 
-eststo: reg std time_total i.colonizer 
+eststo: reg Area1 centuries i.colonizer 
+eststo: reg Area2 centuries i.colonizer 
+eststo: reg Area3 centuries i.colonizer 
+eststo: reg Area4 centuries i.colonizer 
+eststo: reg Area5 centuries i.colonizer 
+eststo: reg std centuries i.colonizer 
 
 
-reg efw time_total lpd1500s
+reg efw centuries lpd1500s
+
+
+************ APPENDIX B *************
+****** OTHER ROBUSTNESS CHECKS ******
+
+
 
 
 
