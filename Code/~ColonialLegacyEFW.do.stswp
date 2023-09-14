@@ -113,33 +113,34 @@ sum time_total year_independence efw efw_std efw_2019 delta_efw if late==1
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw centuries 
+eststo:reg efw centuries, vce(robust) 
 
 *---Column 2: Identity of Colonizer
-eststo: reg efw centuries i.colonizer
+eststo: reg efw centuries i.colonizer, vce(robust)
 
 *---Column 2: No Africa
-eststo:reg efw centuries i.colonizer if africa!=1
+eststo:reg efw centuries i.colonizer if africa!=1, vce(robust)
 	
 *---Column 3: No Americas
-eststo:reg efw centuries  i.colonizer if america!=1
+eststo:reg efw centuries  i.colonizer if america!=1, vce(robust)
 
 *---Column 5: With continent dummies
-eststo:reg efw centuries  i.colonizer  america africa asia
+eststo:reg efw centuries  i.colonizer  america africa asia, vce(robust)
 
 *---Column 6: Without neo-Europes
-eststo:reg efw centuries  i.colonizer if rich4!=1
+eststo:reg efw centuries  i.colonizer if rich4!=1, vce(robust)
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw centuries  i.colonizer  lat_abst landlock island
+eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
 
 *---Column 8: Controlling for climate 
-eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint
+eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow ///
+				stepmid desmid  drystep hiland drywint, vce(robust)
 
 test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres
+eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
 
 test goldm = iron =  silv = zinc = oilres = 0
 
@@ -151,33 +152,34 @@ esttab using "`path'/Results/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) 
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw_indep centuries if late==1
+eststo:reg efw_indep centuries if late==1, vce(robust)
 
 *---Column 2: Identity of Colonizer
-eststo:reg efw_indep centuries i.colonizer if late==1
+eststo:reg efw_indep centuries i.colonizer if late==1, vce(robust)
 
 *---Column 2: No Africa
-eststo:reg efw_indep centuries i.colonizer if africa!=1 & late==1
+eststo:reg efw_indep centuries i.colonizer if africa!=1 & late==1, vce(robust)
 	
 *---Column 3: No Americas
-eststo:reg efw_indep centuries  i.colonizer if america!=1 & late==1
+eststo:reg efw_indep centuries  i.colonizer if america!=1 & late==1, vce(robust)
 
 *---Column 5: With continent dummies
-eststo:reg efw_indep centuries  i.colonizer  america africa asia if late==1
+eststo:reg efw_indep centuries  i.colonizer  america africa asia if late==1, vce(robust)
 
 *---Column 6: Controlling for Gap
-eststo:reg efw_indep centuries  i.colonizer year_independence if late==1
+eststo:reg efw_indep centuries  i.colonizer year_independence if late==1, vce(robust)
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw_indep centuries  i.colonizer  lat_abst landlock island if late==1
+eststo:reg efw_indep centuries  i.colonizer lat_abst landlock island if late==1, vce(robust)
 
 *---Column 8: Controlling for climate 
-eststo: reg efw_indep centuries  i.colonizer  humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint if late==1
+eststo: reg efw_indep centuries  i.colonizer  humid* temp* steplow  ///
+		deslow stepmid desmid  drystep hiland drywint if late==1, vce(robust)
 
 test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if diff<10
+eststo: reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce(robust)
 
 test goldm = iron =  silv = zinc = oilres = 0
 
