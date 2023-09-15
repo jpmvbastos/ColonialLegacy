@@ -220,13 +220,13 @@ sum time_total year_independence efw if efw!=.
 eststo clear
 
 *---Table 4 - By Area of EFW
-eststo: reg efw centuries i.colonizer, vce(robust) 
 eststo: reg Area1 centuries i.colonizer, vce(robust) 
 eststo: reg Area2 centuries i.colonizer, vce(robust) 
 eststo: reg Area3 centuries i.colonizer, vce(robust) 
 eststo: reg Area4 centuries i.colonizer, vce(robust) 
 eststo: reg Area5 centuries i.colonizer, vce(robust) 
 eststo: reg std centuries i.colonizer, vce(robust) 
+eststo: reg efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
