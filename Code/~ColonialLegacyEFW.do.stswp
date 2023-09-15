@@ -137,11 +137,12 @@ eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
 eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint, vce(robust)
 
-test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
 eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
-
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
@@ -173,18 +174,39 @@ eststo:reg efw_indep centuries  i.colonizer year_independence if late==1, vce(ro
 eststo:reg efw_indep centuries  i.colonizer lat_abst landlock island if late==1, vce(robust)
 
 *---Column 8: Controlling for climate 
-eststo: reg efw_indep centuries  i.colonizer  humid* temp* steplow  ///
+*eststo: 
+reg efw_indep centuries  i.colonizer  humid* temp* steplow  /// 
 		deslow stepmid desmid  drystep hiland drywint if late==1, vce(robust)
-
-test  humid1 = humid2 = humid3 = humid4 = temp1 = temp2 =temp3 = temp4 = temp5 =  steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce(robust)
-
+*eststo: 
+reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce(robust)
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+**** Standard Deviation and Delta EFW results
+
+*---Column 1: Base Sample	
+reg std centuries, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+reg std centuries i.colonizer, vce(robust)
+
+*---Column 3: With continent dummies
+reg std centuries  i.colonizer  america africa asia, vce(robust)
+
+*---Column 4: Without neo-Europes
+reg std centuries  i.colonizer if rich4!=1, vce(robust)
+
+*---Columnd 5: Controlling for multiple colonizers
+reg std centuries multiple i.colonizer, vce(robust)
+
 
 
 ******* APPENDIX A ****** 
@@ -198,15 +220,16 @@ sum time_total year_independence efw if efw!=.
 eststo clear
 
 *---Table 4 - By Area of EFW
-eststo: reg Area1 centuries i.colonizer 
-eststo: reg Area2 centuries i.colonizer 
-eststo: reg Area3 centuries i.colonizer 
-eststo: reg Area4 centuries i.colonizer 
-eststo: reg Area5 centuries i.colonizer 
-eststo: reg std centuries i.colonizer 
+eststo: reg efw centuries i.colonizer, vce(robust) 
+eststo: reg Area1 centuries i.colonizer, vce(robust) 
+eststo: reg Area2 centuries i.colonizer, vce(robust) 
+eststo: reg Area3 centuries i.colonizer, vce(robust) 
+eststo: reg Area4 centuries i.colonizer, vce(robust) 
+eststo: reg Area5 centuries i.colonizer, vce(robust) 
+eststo: reg std centuries i.colonizer, vce(robust) 
 
-
-reg efw centuries lpd1500s
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 ************ APPENDIX B *************
