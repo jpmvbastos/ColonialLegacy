@@ -57,6 +57,7 @@ replace continent = "Africa" if africa==1
 replace continent = "America" if america==1
 replace continent = "Asia" if asia==1
 replace continent = "Oceania" if africa!=1 & america!=1 & asia!=1
+encode continent, gen(region)
 
 gen multiple = 0
 replace multiple = 1 if ncolonizers > 1
@@ -118,17 +119,18 @@ eststo:reg efw centuries, vce(robust)
 *---Column 2: Identity of Colonizer
 eststo: reg efw centuries i.colonizer, vce(robust)
 
-*---Column 2: No Africa
+*---Column 3: No Africa
 eststo:reg efw centuries i.colonizer if africa!=1, vce(robust)
 	
-*---Column 3: No Americas
+*---Column 4: No Americas
 eststo:reg efw centuries  i.colonizer if america!=1, vce(robust)
 
 *---Column 5: With continent dummies
 eststo:reg efw centuries  i.colonizer  america africa asia, vce(robust)
 
 *---Column 6: Without neo-Europes
-eststo:reg efw centuries  i.colonizer if rich4!=1, vce(robust)
+eststo:
+reg efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
 
 *---Column 7: Controlling for latitude 
 eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
@@ -147,6 +149,14 @@ test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+* Note on Columns (3) and (4)
+
+* Results become significant if I remove Neo-Europes or Neo-Europes+Singapore
+
+reg efw centuries i.colonizer if africa!=1 & rich4==0, vce(robust)
+reg efw centuries i.colonizer if america!=1 & rich4==0, vce(robust)
+
 
 * LATE INDEPENDENCY SAMPLE (late==1)
 
