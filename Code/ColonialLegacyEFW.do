@@ -129,7 +129,8 @@ eststo:reg efw centuries  i.colonizer if america!=1, vce(robust)
 eststo:reg efw centuries  i.colonizer  america africa asia, vce(robust)
 
 *---Column 6: Without neo-Europes
-eststo:reg efw centuries  i.colonizer if rich4!=1, vce(robust)
+eststo:
+reg efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
 
 *---Column 7: Controlling for latitude 
 eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
