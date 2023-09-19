@@ -245,6 +245,25 @@ esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) 
 ************ APPENDIX B *************
 ****** OTHER ROBUSTNESS CHECKS ******
 
+*---Column 1: Base Sample	
+reg delta_efw centuries, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+reg delta_efw centuries i.colonizer, vce(robust)
+
+*---Column 3: With continent dummies
+reg delta_efw centuries  i.colonizer america africa asia, vce(robust)
+
+*---Column 4: Without neo-Europes
+reg delta_efw centuries  i.colonizer if rich4!=1, vce(robust)
+
+*---Columnd 5: Controlling for multiple colonizers
+reg delta_efw centuries multiple i.colonizer, vce(robust)
+
+*---Column 6: Controlling for natural resources 
+reg delta_efw centuries i.colonizer  goldm iron silv zinc oilres steplow  deslow ///
+				stepmid desmid  drystep hiland drywint, vce(robust)
+
 
 
 
