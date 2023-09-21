@@ -266,6 +266,9 @@ reg delta_efw centuries i.colonizer  goldm iron silv zinc oilres steplow  deslow
 
 
 
+**** Hausman Test for Acemoglu, Johnson , and Robinson (2001)
+
+
 
 
 
