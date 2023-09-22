@@ -115,29 +115,37 @@ eststo clear
 
 *---Column 1: Base Sample	
 eststo:reg efw centuries, vce(robust) 
+psacalc delta centuries
 
 *---Column 2: Identity of Colonizer
 eststo: reg efw centuries i.colonizer, vce(robust)
+psacalc delta centuries
 
 *---Column 3: No Africa
 eststo:reg efw centuries i.colonizer if africa!=1, vce(robust)
+psacalc delta centuries	
 	
 *---Column 4: No Americas
 eststo:reg efw centuries  i.colonizer if america!=1, vce(robust)
+psacalc delta centuries
 
 *---Column 5: With continent dummies
 eststo:reg efw centuries  i.colonizer  america africa asia, vce(robust)
+psacalc delta centuries
 
 *---Column 6: Without neo-Europes
 eststo:
 reg efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
+psacalc delta centuries
 
 *---Column 7: Controlling for latitude 
 eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
+psacalc delta centuries
 
 *---Column 8: Controlling for climate 
 eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint, vce(robust)
+psacalc delta centuries
 
 test  humid1 = humid2 = humid3 = humid4 = 0
 test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
@@ -145,6 +153,8 @@ test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
 
 *---Column 9: Controlling for natural resources 
 eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
+psacalc delta centuries
+
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
