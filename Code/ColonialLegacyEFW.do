@@ -10,18 +10,31 @@ merge 1:1 country_code using "Data/AJRRevFortune.dta"
 drop _merge ISO_Code_2 Countries ISO_Code_3 closest
 drop if _n>128
 
+drop if efw==.
+
 rename independence year_independence
 rename time_indep time_indep_interim
+rename avg_efw efw_colonizer 
+rename efw avg_efw
+
 gen time_indep = 2000-year_independence
 gen lag_efw = efw_year - year_independence
-
 gen centuries = time_total/100
-
 gen diff = efw_year - year_independence
 gen delta_efw = efw_2019 - efw_indep
 
 replace simultaneous = 0 if simultaneous ==.
 replace time_total = time_total - simultaneous
+
+gen multiple = 0
+replace multiple = 1 if ncolonizers > 1
+
+encode main, gen(long_colonizer) /* Longest */
+encode main, gen(colonizer) 
+
+* Countries with indep since 1940 and that gained EFW score within 10 years
+gen late = 0
+replace late = 1 if diff < 10 & year_independence >= 1940
 
 
 * Adjusting missing continents 
@@ -56,14 +69,6 @@ replace continent = "Asia" if asia==1
 replace continent = "Oceania" if africa!=1 & america!=1 & asia!=1
 encode continent, gen(region)
 
-gen multiple = 0
-replace multiple = 1 if ncolonizers > 1
-
-encode main, gen(long_colonizer) /* Longest */
-encode main, gen(colonizer) 
-
-drop if efw==.
-
 /*
 1 = Belgium
 2 = Britain
@@ -90,9 +95,6 @@ replace colonizer=8 if f_spain==1
 replace colonizer=6 if country=="Suriname"
 replace colonizer=8 if country=="Philippines"
 
-* Countries with indep since 1940 and that gained EFW score within 10 years
-gen late = 0
-replace late = 1 if diff < 10 & year_independence >= 1940
 
 
 * Macbook Air
@@ -105,43 +107,43 @@ use "Data/ColonialEFW.dta"
 * Summary Statistics (Table 1)
 
 sum time_total year_independence efw efw_std efw_2019 delta_efw 
-sum time_total year_independence efw efw_std efw_2019 delta_efw if late==1
+sum time_total year_independence efw_indep efw_std efw_2019 delta_efw if late==1
 
 
 * Main Results (Table 2)
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw centuries, vce(robust) 
+eststo:reg avg_efw centuries, vce(robust) 
 psacalc delta centuries
 
 *---Column 2: Identity of Colonizer
-eststo: reg efw centuries i.colonizer, vce(robust)
+eststo: reg avg_efw centuries i.colonizer, vce(robust)
 psacalc delta centuries
 
 *---Column 3: No Africa
-eststo:reg efw centuries i.colonizer if africa!=1, vce(robust)
+eststo:reg avg_efw centuries i.colonizer if africa!=1, vce(robust)
 psacalc delta centuries	
 	
 *---Column 4: No Americas
-eststo:reg efw centuries  i.colonizer if america!=1, vce(robust)
+eststo:reg avg_efw centuries  i.colonizer if america!=1, vce(robust)
 psacalc delta centuries
 
 *---Column 5: With continent dummies
-eststo:reg efw centuries  i.colonizer  america africa asia, vce(robust)
+eststo:reg avg_efw centuries  i.colonizer  america africa asia, vce(robust)
 psacalc delta centuries
 
 *---Column 6: Without neo-Europes
 eststo:
-reg efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
+reg avg_efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
 psacalc delta centuries
 
 *---Column 7: Controlling for latitude 
-eststo:reg efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
+eststo:reg avg_efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
 psacalc delta centuries
 
 *---Column 8: Controlling for climate 
-eststo: reg efw centuries  i.colonizer  humid* temp* steplow  deslow ///
+eststo: reg avg_efw centuries  i.colonizer  humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint, vce(robust)
 psacalc delta centuries
 
@@ -150,7 +152,7 @@ test  temp1 = temp2 =temp3 = temp4 = temp5 = 0
 test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-eststo: reg efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
+eststo: reg avg_efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
 psacalc delta centuries
 
 test goldm = iron =  silv = zinc = oilres = 0
@@ -162,8 +164,8 @@ esttab using "`path'/Results/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) 
 
 * Results become significant if I remove Neo-Europes or Neo-Europes+Singapore
 
-reg efw centuries i.colonizer if africa!=1 & rich4==0, vce(robust)
-reg efw centuries i.colonizer if america!=1 & rich4==0, vce(robust)
+reg avg_efw centuries i.colonizer if africa!=1 & rich4==0, vce(robust)
+reg avg_efw centuries i.colonizer if america!=1 & rich4==0, vce(robust)
 
 
 * LATE INDEPENDENCY SAMPLE (late==1)
@@ -244,7 +246,7 @@ eststo: reg Area3 centuries i.colonizer, vce(robust)
 eststo: reg Area4 centuries i.colonizer, vce(robust) 
 eststo: reg Area5 centuries i.colonizer, vce(robust) 
 eststo: reg std centuries i.colonizer, vce(robust) 
-eststo: reg efw centuries i.colonizer, vce(robust) 
+eststo: reg avg_efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
