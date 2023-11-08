@@ -1,16 +1,13 @@
 * PATHS
 
-* Mac Office
-local path "/Users/joamacha/Library/CloudStorage/OneDrive-TexasTechUniversity/Personal/Projects/Code/GitHub/ColonialLegacy"
+cd "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/"
 
-* Macbook Air
-local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 
-import excel "`path'/Data/colonies.xlsx", sheet("Sheet1") firstrow clear
+import excel "Data/colonies.xlsx", sheet("Sheet1") firstrow clear
 
-merge 1:1 country_code using "`path'/Data/AJRRevFortune.dta"
+merge 1:1 country_code using "Data/AJRRevFortune.dta"
 
-drop _merge Year ISO_Code_2 Countries ISO_Code_3 closest
+drop _merge ISO_Code_2 Countries ISO_Code_3 closest
 drop if _n>128
 
 rename independence year_independence
@@ -37,7 +34,7 @@ replace africa=1 if country=="Democratic Republic of the Congo" ///
 
 replace asia=1 if country=="Brunei Darussalam" | country=="Cambodia" ///
 				| country=="Thailand" | country=="Timor-Leste" | country == "Cyprus" ///
-				| (miss==1 & WorldBankRegion=="Middle East & North Africa") ///
+				| (miss==1 & wb_region=="Middle East & North Africa") ///
 				| country == "Bhutan"
 				
 replace america=1 if country=="Antigua and Barbuda"
@@ -62,7 +59,6 @@ encode continent, gen(region)
 gen multiple = 0
 replace multiple = 1 if ncolonizers > 1
 
-drop colonizer
 encode main, gen(long_colonizer) /* Longest */
 encode main, gen(colonizer) 
 
@@ -94,14 +90,16 @@ replace colonizer=8 if f_spain==1
 replace colonizer=6 if country=="Suriname"
 replace colonizer=8 if country=="Philippines"
 
+* Countries with indep since 1940 and that gained EFW score within 10 years
+gen late = 0
+replace late = 1 if diff < 10 & year_independence >= 1940
+
 
 * Macbook Air
-local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-save "`path'/Data/ColonialEFW.dta", replace
+save "Data/ColonialEFW.dta", replace
 
-
-local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-use "`path'/Data/ColonialEFW.dta"
+* Clean data, start here.
+use "Data/ColonialEFW.dta"
 
 
 * Summary Statistics (Table 1)
