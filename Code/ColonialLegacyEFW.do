@@ -101,16 +101,53 @@ replace colonizer=8 if country=="Philippines"
 save "Data/ColonialEFW.dta", replace
 
 * Clean data, start here.
-use "Data/ColonialEFW.dta"
+use "Data/ColonialEFW.dta", clear
 
 
-* Summary Statistics (Table 1)
-
+* Table 1: Summary Statistics 
 sum time_total year_independence efw efw_std efw_2019 delta_efw 
 sum time_total year_independence efw_indep efw_std efw_2019 delta_efw if late==1
 
 
-* Main Results (Table 2)
+* Table 2: List of Colonies by Colonizer
+bysort colonizer: tab country
+
+
+* Table 3: Economic Freedom of Colonizer
+
+eststo clear 
+
+*---Column 1: Base Sample	
+eststo:reg avg_efw efw_colonizer, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+eststo: reg avg_efw efw_colonizer if first>=1850, vce(robust)
+
+*---Column 3: No Africa
+eststo:reg avg_efw efw_colonizer if africa!=1, vce(robust)
+	
+*---Column 4: No Americas
+eststo:reg avg_efw efw_colonizer if america!=1, vce(robust)
+
+*---Column 5: With continent dummies
+eststo:reg avg_efw efw_colonizer america africa asia, vce(robust)
+
+*---Column 6: Without neo-Europes
+eststo: reg avg_efw efw_colonizer if rich4!=1, vce(robust)
+
+*---Column 7: Controlling for latitude 
+eststo:reg avg_efw efw_colonizer lat_abst landlock island, vce(robust)
+
+*---Column 8: Controlling for timing
+eststo: reg avg_efw efw_colonizer first indep_year, vce(robust)
+
+*---Column 9: Multiple Colonizers 
+eststo: reg avg_efw efw_colonizer multiple, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+* Table 4: Length of Colonial Rule 
 eststo clear
 
 *---Column 1: Base Sample	
@@ -158,7 +195,7 @@ psacalc delta centuries
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Table2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 * Note on Columns (3) and (4)
 
@@ -207,7 +244,7 @@ reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/Table5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 **** Standard Deviation and Delta EFW results
@@ -249,7 +286,7 @@ eststo: reg std centuries i.colonizer, vce(robust)
 eststo: reg avg_efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Table4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/Table6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 ************ APPENDIX B *************
