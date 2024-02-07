@@ -1,0 +1,47 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{9}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}&\multicolumn{1}{c}{(9)}\\
+            &\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}\\
+\hline
+efw\_colonizer&       0.983\sym{***}&       0.758\sym{*}  &       0.224         &       0.916\sym{***}&       0.730\sym{**} &       0.983\sym{***}&       0.951\sym{**} &       0.878\sym{**} &       0.971\sym{***}\\
+            &     (0.312)         &     (0.392)         &     (0.537)         &     (0.340)         &     (0.344)         &     (0.312)         &     (0.396)         &     (0.382)         &     (0.307)         \\
+[1em]
+america     &                     &                     &                     &                     &       0.574\sym{***}&                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.194)         &                     &                     &                     &                     \\
+[1em]
+africa      &                     &                     &                     &                     &     0.00451         &                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.227)         &                     &                     &                     &                     \\
+[1em]
+asia        &                     &                     &                     &                     &       0.629\sym{**} &                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.286)         &                     &                     &                     &                     \\
+[1em]
+lat\_abst    &                     &                     &                     &                     &                     &                     &      -0.221         &                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (1.368)         &                     &                     \\
+[1em]
+landlock    &                     &                     &                     &                     &                     &                     &       0.437\sym{*}  &                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (0.258)         &                     &                     \\
+[1em]
+island      &                     &                     &                     &                     &                     &                     &       0.905\sym{***}&                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (0.289)         &                     &                     \\
+[1em]
+first       &                     &                     &                     &                     &                     &                     &                     &   -0.000670         &                     \\
+            &                     &                     &                     &                     &                     &                     &                     &  (0.000828)         &                     \\
+[1em]
+year\_independence&                     &                     &                     &                     &                     &                     &                     &     0.00162         &                     \\
+            &                     &                     &                     &                     &                     &                     &                     &    (0.0165)         &                     \\
+[1em]
+multiple    &                     &                     &                     &                     &                     &                     &                     &                     &       0.219         \\
+            &                     &                     &                     &                     &                     &                     &                     &                     &     (0.210)         \\
+[1em]
+\_cons      &      -1.074         &       0.541         &       5.053         &      -0.608         &       0.578         &      -1.074         &      -1.208         &      -2.248         &      -1.039         \\
+            &     (2.341)         &     (2.881)         &     (4.135)         &     (2.527)         &     (2.709)         &     (2.341)         &     (2.989)         &     (31.97)         &     (2.291)         \\
+\hline
+\(N\)       &          54         &          37         &          22         &          48         &          54         &          54         &          45         &          54         &          54         \\
+\(R^{2}\)   &       0.197         &       0.120         &       0.010         &       0.167         &       0.294         &       0.197         &       0.444         &       0.204         &       0.208         \\
+\hline\hline
+\multicolumn{10}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{10}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+}

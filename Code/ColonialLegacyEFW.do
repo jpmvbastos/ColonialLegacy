@@ -105,7 +105,7 @@ use "Data/ColonialEFW.dta", clear
 
 
 * Table 1: Summary Statistics 
-sum time_total year_independence efw efw_std efw_2019 delta_efw 
+sum time_total year_independence avg_efw efw_std efw_2019 delta_efw 
 sum time_total year_independence efw_indep efw_std efw_2019 delta_efw if late==1
 
 
@@ -139,7 +139,7 @@ eststo: reg avg_efw efw_colonizer if rich4!=1, vce(robust)
 eststo:reg avg_efw efw_colonizer lat_abst landlock island, vce(robust)
 
 *---Column 8: Controlling for timing
-eststo: reg avg_efw efw_colonizer first indep_year, vce(robust)
+eststo: reg avg_efw efw_colonizer first year_independence, vce(robust)
 
 *---Column 9: Multiple Colonizers 
 eststo: reg avg_efw efw_colonizer multiple, vce(robust)
@@ -151,38 +151,29 @@ esttab using "`path'/Results/Table3.tex", replace star(* 0.10 ** 0.05 *** 0.01) 
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg avg_efw centuries, vce(robust) 
-psacalc delta centuries
+eststo: reg avg_efw centuries, vce(robust) 
 
 *---Column 2: Identity of Colonizer
 eststo: reg avg_efw centuries i.colonizer, vce(robust)
-psacalc delta centuries
 
 *---Column 3: No Africa
-eststo:reg avg_efw centuries i.colonizer if africa!=1, vce(robust)
-psacalc delta centuries	
+eststo: reg avg_efw centuries i.colonizer if africa!=1, vce(robust)
 	
 *---Column 4: No Americas
 eststo:reg avg_efw centuries  i.colonizer if america!=1, vce(robust)
-psacalc delta centuries
 
 *---Column 5: With continent dummies
 eststo:reg avg_efw centuries  i.colonizer  america africa asia, vce(robust)
-psacalc delta centuries
 
 *---Column 6: Without neo-Europes
-eststo:
-reg avg_efw centuries  i.colonizer if rich4!=1 & country!="Singapore", vce(robust)
-psacalc delta centuries
+eststo: reg avg_efw centuries  i.colonizer if rich4!=1, vce(robust)
 
 *---Column 7: Controlling for latitude 
 eststo:reg avg_efw centuries  i.colonizer  lat_abst landlock island, vce(robust)
-psacalc delta centuries
 
 *---Column 8: Controlling for climate 
 eststo: reg avg_efw centuries  i.colonizer  humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint, vce(robust)
-psacalc delta centuries
 
 test  humid1 = humid2 = humid3 = humid4 = 0
 test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
@@ -190,7 +181,6 @@ test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
 
 *---Column 9: Controlling for natural resources 
 eststo: reg avg_efw centuries i.colonizer  goldm iron silv zinc oilres, vce(robust)
-psacalc delta centuries
 
 test goldm = iron =  silv = zinc = oilres = 0
 
@@ -205,24 +195,59 @@ reg avg_efw centuries i.colonizer if africa!=1 & rich4==0, vce(robust)
 reg avg_efw centuries i.colonizer if america!=1 & rich4==0, vce(robust)
 
 
-* LATE INDEPENDENCY SAMPLE (late==1)
+************** LATE INDEPENDENCY SAMPLE (late==1) *******************
+
+* Table 5: Economic Freedom of Colonizer
+
+eststo clear 
+
+*---Column 1: Base Sample	
+eststo:reg avg_efw efw_colonizer if late==1, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+eststo: reg avg_efw efw_colonizer if first>=1850 & late==1, vce(robust)
+
+*---Column 3: No Africa
+eststo:reg avg_efw efw_colonizer if africa!=1 & late==1, vce(robust)
+	
+*---Column 4: No Americas
+eststo:reg avg_efw efw_colonizer if america!=1 & late==1, vce(robust)
+
+*---Column 5: With continent dummies
+eststo:reg avg_efw efw_colonizer america africa asia if late==1, vce(robust)
+
+*---Column 6: Controlling for latitude 
+eststo:reg avg_efw efw_colonizer lat_abst landlock island if late==1, vce(robust)
+
+*---Column 7: Controlling for timing
+eststo: reg avg_efw efw_colonizer first year_independence if late==1, vce(robust)
+
+*---Column 8: Multiple Colonizers 
+eststo: reg avg_efw efw_colonizer multiple if late==1, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Table5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2
+
+
+
+* Table 6: Length of Colonial Rule
 
 eststo clear
 
 *---Column 1: Base Sample	
-eststo:reg efw_indep centuries if late==1, vce(robust)
+eststo: reg efw_indep centuries if late==1, vce(robust)
 
 *---Column 2: Identity of Colonizer
-eststo:reg efw_indep centuries i.colonizer if late==1, vce(robust)
+eststo: reg efw_indep centuries i.colonizer if late==1, vce(robust)
 
 *---Column 2: No Africa
-eststo:reg efw_indep centuries i.colonizer if africa!=1 & late==1, vce(robust)
+eststo: reg efw_indep centuries i.colonizer if africa!=1 & late==1, vce(robust)
 	
 *---Column 3: No Americas
-eststo:reg efw_indep centuries  i.colonizer if america!=1 & late==1, vce(robust)
+eststo: reg efw_indep centuries  i.colonizer if america!=1 & late==1, vce(robust)
 
 *---Column 5: With continent dummies
-eststo:reg efw_indep centuries  i.colonizer  america africa asia if late==1, vce(robust)
+eststo:reg efw_indep centuries  i.colonizer america africa asia if late==1, vce(robust)
 
 *---Column 6: Controlling for Gap
 eststo:reg efw_indep centuries  i.colonizer year_independence if late==1, vce(robust)
@@ -231,39 +256,22 @@ eststo:reg efw_indep centuries  i.colonizer year_independence if late==1, vce(ro
 eststo:reg efw_indep centuries  i.colonizer lat_abst landlock island if late==1, vce(robust)
 
 *---Column 8: Controlling for climate 
-*eststo: 
-reg efw_indep centuries  i.colonizer  humid* temp* steplow  /// 
+eststo: reg efw_indep centuries  i.colonizer  humid* temp* steplow  /// 
 		deslow stepmid desmid  drystep hiland drywint if late==1, vce(robust)
 test  humid1 = humid2 = humid3 = humid4 = 0
 test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
 test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
 
 *---Column 9: Controlling for natural resources 
-*eststo: 
-reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce(robust)
+eststo: reg efw_indep centuries i.colonizer  goldm iron silv zinc oilres if late==1, vce(robust)
 test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Table5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/Table6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-**** Standard Deviation and Delta EFW results
-
-*---Column 1: Base Sample	
-reg std centuries, vce(robust) 
-
-*---Column 2: Identity of Colonizer
-reg std centuries i.colonizer, vce(robust)
-
-*---Column 3: With continent dummies
-reg std centuries  i.colonizer  america africa asia, vce(robust)
-
-*---Column 4: Without neo-Europes
-reg std centuries  i.colonizer if rich4!=1, vce(robust)
-
-*---Columnd 5: Controlling for multiple colonizers
-reg std centuries multiple i.colonizer, vce(robust)
-
+** Note: dropping the colonizer fixed effects makes 6 and 7 significant
+* column 8 at p=0.108 and column 9 at 0.001
 
 
 ******* APPENDIX A ****** 
@@ -274,9 +282,31 @@ reg std centuries multiple i.colonizer, vce(robust)
 bysort colonizer: sum time_total year_independence efw 
 sum time_total year_independence efw if efw!=.
 
+
+************ APPENDIX B *************
+****** OTHER ROBUSTNESS CHECKS ******
+
+
 eststo clear
 
-*---Table 4 - By Area of EFW
+*---Table B1: Std vs. Economic Freedom of Colonizer and Length of Colonial Rule
+
+eststo clear
+
+*---Column 1: Base Sample	
+reg std multiple, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+reg std multiple i.colonizer, vce(robust)
+
+*---Column 3: With continent dummies
+reg std multiple centuries i.colonizer, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB1.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+*---Table B2 - By Area of EFW
 eststo: reg Area1 centuries i.colonizer, vce(robust) 
 eststo: reg Area2 centuries i.colonizer, vce(robust) 
 eststo: reg Area3 centuries i.colonizer, vce(robust) 
@@ -286,36 +316,40 @@ eststo: reg std centuries i.colonizer, vce(robust)
 eststo: reg avg_efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Table6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-************ APPENDIX B *************
-****** OTHER ROBUSTNESS CHECKS ******
+*---Table B3 - Longest Robustness Check: Length of colonial rule
+
+
+
+
+*---Table B4: Delta EFW: Robustness for Late Independence
+
+eststo clear
+
+* Panel A: Economic Freedom of Colonizer
 
 *---Column 1: Base Sample	
-reg delta_efw centuries, vce(robust) 
+eststo: reg delta_efw efw_colonizer if late==1, vce(robust) 
 
 *---Column 2: Identity of Colonizer
-reg delta_efw centuries i.colonizer, vce(robust)
+eststo: reg delta_efw efw_colonizer multiple if late==1, vce(robust)
 
 *---Column 3: With continent dummies
-reg delta_efw centuries  i.colonizer america africa asia, vce(robust)
+eststo: reg delta_efw centuries america africa asia if late==1, vce(robust)
 
-*---Column 4: Without neo-Europes
-reg delta_efw centuries  i.colonizer if rich4!=1, vce(robust)
+* Panel B: Length of Colonial Rule
 
-*---Columnd 5: Controlling for multiple colonizers
-reg delta_efw centuries multiple i.colonizer, vce(robust)
+eststo clear
 
-*---Column 6: Controlling for natural resources 
-reg delta_efw centuries i.colonizer  goldm iron silv zinc oilres steplow  deslow ///
-				stepmid desmid  drystep hiland drywint, vce(robust)
+*---Column 4: Base Sample	
+eststo: reg delta_efw centuries if late==1, vce(robust) 
 
+*---Column 5: Identity of Colonizer
+eststo: reg delta_efw centuries i.colonizer if late==1, vce(robust)
 
-
-**** Hausman Test for Acemoglu, Johnson , and Robinson (2001)
-
-
-
+*---Column 6: With continent dummies
+eststo: reg delta_efw centuries  i.colonizer america africa asia if late==1, vce(robust)
 
 
