@@ -294,19 +294,34 @@ eststo clear
 eststo clear
 
 *---Column 1: Base Sample	
-reg std multiple, vce(robust) 
+eststo: reg std multiple, vce(robust) 
 
 *---Column 2: Identity of Colonizer
-reg std multiple i.colonizer, vce(robust)
+eststo: reg std multiple i.colonizer, vce(robust)
 
 *---Column 3: With continent dummies
-reg std multiple centuries i.colonizer, vce(robust)
+eststo: reg std multiple centuries i.colonizer, vce(robust)
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB1.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*---Table B2 - By Area of EFW
+
+*---Table B2 - By Area of EFW: Economic Freedom of Colonizer
+eststo clear
+eststo:reg Area1 efw_colonizer, vce(robust) 
+eststo:reg Area2 efw_colonizer, vce(robust) 
+eststo:reg Area3 efw_colonizer, vce(robust) 
+eststo:reg Area4 efw_colonizer, vce(robust) 
+eststo:reg Area5 efw_colonizer, vce(robust) 
+eststo:reg std efw_colonizer, vce(robust) 
+eststo:reg avg_efw efw_colonizer, vce(robust)
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+*---Table B3 - By Area of EFW: Centuries
+eststo clear
 eststo: reg Area1 centuries i.colonizer, vce(robust) 
 eststo: reg Area2 centuries i.colonizer, vce(robust) 
 eststo: reg Area3 centuries i.colonizer, vce(robust) 
@@ -316,15 +331,15 @@ eststo: reg std centuries i.colonizer, vce(robust)
 eststo: reg avg_efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/TableB3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*---Table B3 - Longest Robustness Check: Length of colonial rule
+*---Table B4 - Longest Robustness Check: Length of colonial rule
 
 
 
 
-*---Table B4: Delta EFW: Robustness for Late Independence
+*---Table B5: Delta EFW: Robustness for Late Independence
 
 eststo clear
 
@@ -337,7 +352,10 @@ eststo: reg delta_efw efw_colonizer if late==1, vce(robust)
 eststo: reg delta_efw efw_colonizer multiple if late==1, vce(robust)
 
 *---Column 3: With continent dummies
-eststo: reg delta_efw centuries america africa asia if late==1, vce(robust)
+eststo: reg delta_efw efw_colonizer america africa asia if late==1, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB4_A.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 * Panel B: Length of Colonial Rule
 
@@ -351,5 +369,8 @@ eststo: reg delta_efw centuries i.colonizer if late==1, vce(robust)
 
 *---Column 6: With continent dummies
 eststo: reg delta_efw centuries  i.colonizer america africa asia if late==1, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB4_B.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
