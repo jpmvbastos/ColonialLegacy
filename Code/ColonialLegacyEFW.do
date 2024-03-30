@@ -286,28 +286,7 @@ sum time_total year_independence efw if efw!=.
 ************ APPENDIX B *************
 ****** OTHER ROBUSTNESS CHECKS ******
 
-
-eststo clear
-
-*---Table B1: Std vs. Economic Freedom of Colonizer and Length of Colonial Rule
-
-eststo clear
-
-*---Column 1: Base Sample	
-eststo: reg std multiple, vce(robust) 
-
-*---Column 2: Identity of Colonizer
-eststo: reg std multiple i.colonizer, vce(robust)
-
-*---Column 3: With continent dummies
-eststo: reg std multiple centuries i.colonizer, vce(robust)
-
-local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/TableB1.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
-
-
-
-*---Table B2 - By Area of EFW: Economic Freedom of Colonizer
+*---Table B1 - By Area of EFW: Economic Freedom of Colonizer
 eststo clear
 eststo:reg Area1 efw_colonizer, vce(robust) 
 eststo:reg Area2 efw_colonizer, vce(robust) 
@@ -317,10 +296,10 @@ eststo:reg Area5 efw_colonizer, vce(robust)
 eststo:reg std efw_colonizer, vce(robust) 
 eststo:reg avg_efw efw_colonizer, vce(robust)
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/TableB1.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*---Table B3 - By Area of EFW: Centuries
+*---Table B2 - By Area of EFW: Centuries
 eststo clear
 eststo: reg Area1 centuries i.colonizer, vce(robust) 
 eststo: reg Area2 centuries i.colonizer, vce(robust) 
@@ -331,15 +310,15 @@ eststo: reg std centuries i.colonizer, vce(robust)
 eststo: reg avg_efw centuries i.colonizer, vce(robust) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/TableB3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*---Table B4 - Longest Robustness Check: Length of colonial rule
+*---Table B3 - Longest Robustness Check: Length of colonial rule
 
 
 
 
-*---Table B5: Delta EFW: Robustness for Late Independence
+*---Table B4: Delta EFW: Robustness for Late Independence
 
 eststo clear
 
@@ -372,5 +351,91 @@ eststo: reg delta_efw centuries  i.colonizer america africa asia if late==1, vce
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB4_B.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+*--- Table B5: Determinants of Colonial Tenure
+
+eststo clear
+
+*--- Panel A: Dep. Variable: First
+
+*--- Column 1: Location
+eststo: reg first lat_abst landlock island america africa asia, vce(robust)
+
+*--- Column 2: Climate and Soil
+eststo: reg first  humid* temp* steplow deslow stepmid desmid ///
+		drystep hiland drywint, vce(robust)
+		
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+		
+*--- Column 3: Natural Resources
+eststo: reg first  goldm iron silv zinc oilres, vce(robust)
+
+*--- Column 4: Population Density
+eststo: reg first lpd1500s, vce(robust)
+
+
+*--- Panel B: Dep. Variable: Length
+
+*--- Column 1: Location
+eststo: reg centuries lat_abst landlock island america africa asia, vce(robust)
+
+*--- Column 2: Climate and Soil
+eststo: reg centuries  humid* temp* steplow deslow stepmid desmid ///
+		drystep hiland drywint, vce(robust)
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+		
+*--- Column 3: Natural Resources
+eststo: reg centuries  goldm iron silv zinc oilres, vce(robust)
+
+*--- Column 4: Population Density
+eststo: reg centuries lpd1500s, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+eststo clear
+
+*---Table B6: Std vs. Economic Freedom of Colonizer and Length of Colonial Rule
+
+eststo clear
+
+*---Column 1: Base Sample	
+eststo: reg std multiple, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+eststo: reg std multiple i.colonizer, vce(robust)
+
+*---Column 3: With continent dummies
+eststo: reg std multiple centuries i.colonizer, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+* Map: EFW colonizer weights
+
+reg avg_efw efw_colonizer, vce(robust) 
+
+predict pd3
+
+gen wts3 = (efw_colonizer-pd3)^2
+egen sumwts3 = sum(wts3)
+gen relwt3 = wts3/sumwts3
+
+* Map: Centuries weights
+reg avg_efw centuries i.colonizer, vce(robust)
+
+
+predict pd4
+
+gen wts4 = (centuries-pd3)^2
+egen sumwts4 = sum(wts4)
+gen relwt4 = wts4/sumwts4
 
 
