@@ -395,6 +395,7 @@ eststo: reg centuries  goldm iron silv zinc oilres, vce(robust)
 *--- Column 4: Population Density
 eststo: reg centuries lpd1500s, vce(robust)
 
+
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
@@ -421,6 +422,7 @@ esttab using "`path'/Results/TableB6.tex", replace star(* 0.10 ** 0.05 *** 0.01)
 * Map: EFW colonizer weights
 
 reg avg_efw efw_colonizer, vce(robust) 
+psacalc delta efw_colonizer
 
 predict pd3
 
@@ -430,12 +432,13 @@ gen relwt3 = wts3/sumwts3
 
 * Map: Centuries weights
 reg avg_efw centuries i.colonizer, vce(robust)
-
+psacalc delta centuries
 
 predict pd4
 
-gen wts4 = (centuries-pd3)^2
+gen wts4 = (centuries-pd4)^2
 egen sumwts4 = sum(wts4)
 gen relwt4 = wts4/sumwts4
 
+export excel using "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/ColonialEFW.xlsx", firstrow(variables) replace
 
