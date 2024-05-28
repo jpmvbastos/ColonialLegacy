@@ -202,28 +202,28 @@ reg avg_efw centuries i.colonizer if america!=1 & rich4==0, vce(robust)
 eststo clear 
 
 *---Column 1: Base Sample	
-eststo:reg avg_efw efw_colonizer if late==1, vce(robust) 
+eststo:reg efw_indep efw_colonizer if late==1, vce(robust) 
 
-*---Column 2: Identity of Colonizer
-eststo: reg avg_efw efw_colonizer if first>=1850 & late==1, vce(robust)
+*---Column 2: Post-1850
+eststo: reg efw_indep efw_colonizer if first>=1850 & late==1, vce(robust)
 
 *---Column 3: No Africa
-eststo:reg avg_efw efw_colonizer if africa!=1 & late==1, vce(robust)
+eststo:reg efw_indep efw_colonizer if africa!=1 & late==1, vce(robust)
 	
 *---Column 4: No Americas
-eststo:reg avg_efw efw_colonizer if america!=1 & late==1, vce(robust)
+eststo:reg efw_indep efw_colonizer if america!=1 & late==1, vce(robust)
 
 *---Column 5: With continent dummies
-eststo:reg avg_efw efw_colonizer america africa asia if late==1, vce(robust)
+eststo:reg efw_indep efw_colonizer america africa asia if late==1, vce(robust)
 
 *---Column 6: Controlling for latitude 
-eststo:reg avg_efw efw_colonizer lat_abst landlock island if late==1, vce(robust)
+eststo:reg efw_indep efw_colonizer lat_abst landlock island if late==1, vce(robust)
 
 *---Column 7: Controlling for timing
-eststo: reg avg_efw efw_colonizer first year_independence if late==1, vce(robust)
+eststo: reg efw_indep efw_colonizer first year_independence if late==1, vce(robust)
 
 *---Column 8: Multiple Colonizers 
-eststo: reg avg_efw efw_colonizer multiple if late==1, vce(robust)
+eststo: reg efw_indep efw_colonizer multiple if late==1, vce(robust)
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Table5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2
@@ -313,12 +313,75 @@ local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB2.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*---Table B3 - Longest Robustness Check: Length of colonial rule
+
+*---Table B3 - Controlling for pre-colonial population density
+eststo clear
+*---Column 1: Base Sample	
+eststo:reg avg_efw efw_colonizer lpd1500s, vce(robust) 
+
+*---Column 2: Base Sample	
+eststo:reg efw_indep efw_colonizer lpd1500s if late==1, vce(robust) 
+
+*---Column 3: Identity of Colonizer
+eststo: reg avg_efw centuries i.colonizer lpd1500s, vce(robust)
+
+*---Column 4: Identity of Colonizer
+eststo: reg efw_indep centuries i.colonizer lpd1500s if late==1, vce(robust)
+
+*---Column 5: Both
+eststo: reg avg_efw efw_colonizer centuries, vce(robust)
+
+*---Column 6: Both
+eststo: reg avg_efw c.efw_colonizer##c.centuries, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+
+*---Table B4 - Longest Robustness Check: Length of colonial rule
+
+eststo clear
+
+*---Column 1: Base Sample	
+eststo: reg efw_indep centuries if late==1, vce(robust)
+
+*---Column 2: Identity of Colonizer
+eststo: reg efw_indep centuries i.longest if late==1, vce(robust)
+
+*---Column 2: No Africa
+eststo: reg efw_indep centuries i.longest if africa!=1 & late==1, vce(robust)
+	
+*---Column 3: No Americas
+eststo: reg efw_indep centuries  i.longest if america!=1 & late==1, vce(robust)
+
+*---Column 5: With continent dummies
+eststo:reg efw_indep centuries  i.longest america africa asia if late==1, vce(robust)
+
+*---Column 6: Controlling for Gap
+eststo:reg efw_indep centuries  i.longest year_independence if late==1, vce(robust)
+
+*---Column 7: Controlling for latitude 
+eststo:reg efw_indep centuries  i.longest lat_abst landlock island if late==1, vce(robust)
+
+*---Column 8: Controlling for climate 
+eststo: reg efw_indep centuries  i.longest  humid* temp* steplow  /// 
+		deslow stepmid desmid  drystep hiland drywint if late==1, vce(robust)
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0 
+
+*---Column 9: Controlling for natural resources 
+eststo: reg efw_indep centuries i.longest  goldm iron silv zinc oilres if late==1, vce(robust)
+test goldm = iron =  silv = zinc = oilres = 0
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 
 
-*---Table B4: Delta EFW: Robustness for Late Independence
+*---Table B5: Delta EFW: Robustness for Late Independence
 
 eststo clear
 
@@ -353,7 +416,26 @@ local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB4_B.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
-*--- Table B5: Determinants of Colonial Tenure
+
+*---Table B6: Std vs. Economic Freedom of Colonizer and Length of Colonial Rule
+
+eststo clear
+
+*---Column 1: Base Sample	
+eststo: reg std multiple, vce(robust) 
+
+*---Column 2: Identity of Colonizer
+eststo: reg std multiple i.colonizer, vce(robust)
+
+*---Column 3: With continent dummies
+eststo: reg std multiple centuries i.colonizer, vce(robust)
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/TableB6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
+
+
+
+*--- Table B7: Determinants of Colonial Tenure
 
 eststo clear
 
@@ -402,21 +484,6 @@ esttab using "`path'/Results/TableB5.tex", replace star(* 0.10 ** 0.05 *** 0.01)
 
 eststo clear
 
-*---Table B6: Std vs. Economic Freedom of Colonizer and Length of Colonial Rule
-
-eststo clear
-
-*---Column 1: Base Sample	
-eststo: reg std multiple, vce(robust) 
-
-*---Column 2: Identity of Colonizer
-eststo: reg std multiple i.colonizer, vce(robust)
-
-*---Column 3: With continent dummies
-eststo: reg std multiple centuries i.colonizer, vce(robust)
-
-local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/TableB6.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
 
 
 * Map: EFW colonizer weights
@@ -441,4 +508,15 @@ egen sumwts4 = sum(wts4)
 gen relwt4 = wts4/sumwts4
 
 export excel using "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/ColonialEFW.xlsx", firstrow(variables) replace
+
+
+
+**** Plots
+
+twoway (scatter avg_efw centuries, colorvar(region)) (lfit avg_efw centuries)
+
+
+twoway (scatter avg_efw centuries) (lfit avg_efw centuries) if rich4!=1, by(region)
+	  
+
 
