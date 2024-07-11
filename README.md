@@ -6,4 +6,4 @@ Data and replication files for "Colonial Rule and Economic Freedom"
 
 - [Cleaned data](Data/ColonialEFW.dta)
 
-- [Full Paper](https://github.com/jpmvbastos/ColonialLegacy/blob/main/Paper/Colonial%20Rule%20and%20Economic%20Freedom%20-%20Full%20Paper.pdf)
+- [Full Paper](Paper/Colonial_Rule_and_Economic_Freedom.pdf)
