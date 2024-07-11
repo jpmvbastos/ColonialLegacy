@@ -1,3 +1,4 @@
-# ColonialLegacy
+# Colonial Rule and Economic Freedom
  
-Data and code for the investigating how a country's colonial past impacts its level of economic freedom today. 
+Data and replication files for "Colonial Rule and Economic Freedom"
+
