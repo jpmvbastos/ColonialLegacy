@@ -1,0 +1,59 @@
+\begin{sidewaystable}[h!]
+\begin{threeparttable}
+\begin{center}
+\begin{minipage}{\textwidth}
+\small
+\caption{Robustness Check: Controlling for Selection and Interactions}
+\label{tab:TabB3}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc|cc@{\extracolsep{\fill}}}
+\hline\hline
+    
+             &\multicolumn{2}{c}{\textit{Economic Freedom Colonizer}}
+            &\multicolumn{2}{c}{\textit{Length of Colonial Rule}} & 
+            \multicolumn{2}{c}{\textit{Both: Interaction}} \\
+            \cmidrule{2-3}\cmidrule{4-5}\cmidrule{6-7}
+            \textit{Dependent Variable:}
+            &\multicolumn{1}{c}{Avg. EFW}
+            &\multicolumn{1}{c}{EFW Independ.}
+            &\multicolumn{1}{c}{Avg. EFW}
+            &\multicolumn{1}{c}{EFW Independ.}
+                        &\multicolumn{2}{c}{Avg. EFW}\\
+            &\multicolumn{1}{c}{(Base Sample)}
+            &\multicolumn{1}{c}{(Late Indep. Sample)}
+            &\multicolumn{1}{c}{(Base Sample)}
+            &\multicolumn{1}{c}{(Late Indep. Sample)}
+            &\multicolumn{1}{c}{Additive}
+            &\multicolumn{1}{c}{Multiplicative}\\
+            &\multicolumn{1}{c}{(1)}
+            &\multicolumn{1}{c}{(2)}
+            &\multicolumn{1}{c}{(3)}
+            &\multicolumn{1}{c}{(4)}
+            &\multicolumn{1}{c}{(5)}
+            &\multicolumn{1}{c}{(6)}\\
+\hline
+
+HIEL Colonizer &       0.668\sym{***}&       1.406\sym{***}&                     &                     &       0.714\sym{***}&       0.905\sym{***}\\
+            &     (0.191)         &     (0.409)         &                     &                     &     (0.176)         &     (0.312)         \\
+[0.125em]
+Centuries of rule &                     &                     &       0.213\sym{***}&       0.256\sym{**} &       0.179\sym{**} &       0.932         \\
+            &                     &                     &    (0.080)         &     (0.119)         &    (0.068)         &     (0.873)         \\
+HIEL $\times$ Centuries &                     &                     &                     &                     &                     &      -0.102         \\
+            &                     &                     &                     &                     &                     &     (0.117)         \\
+[0.125em]
+Log Pop. Density 1500's   &      -0.236\sym{***}&      -0.115         &      -0.195\sym{***}&      -0.108         &                     &                     \\
+            &    (0.0597)         &     (0.117)         &    (0.0650)         &     (0.126)         &                     &                     \\
+[0.25em]
+Colonizer FE & No & No & Yes & Yes & No & No\\
+\hline
+\(N\)       &          66         &          43         &          86         &          43         &          87         &          66         \\
+\(R^{2}\)   &       0.349         &       0.336         &       0.377         &       0.529         &       0.209         &       0.408         \\
+\hline
+\end{tabular*}
+\begin{tablenotes}
+\small
+\item \textit{Notes}: Robust standard errors in parenthesis. *, **, and *** indicate statistical significance at the 10, 5, and 1\% levels, respectively. Dependent variable is average \textit{Economic Freedom of the World} (EFW) Index score (2000-2019) in columns (1), (3), (5), and (6), and the first EFW score following independence. The late independence sample contains only former colonies that gained independence since 1940 and obtained an EFW score within 10 years of independence. The scores range from 0 to 10. 
+\end{tablenotes}
+\end{minipage}
+\end{center}
+\end{threeparttable}
+\end{sidewaystable}

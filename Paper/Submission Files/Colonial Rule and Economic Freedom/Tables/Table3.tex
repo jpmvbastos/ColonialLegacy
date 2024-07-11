@@ -1,0 +1,54 @@
+\begin{sidewaystable}[h!]
+\begin{threeparttable}
+\begin{center}
+\begin{minipage}{\textwidth}
+\small
+\caption{Economic Freedom of Colonizer and Average Economic Freedom (2000-2019), Base Sample}
+\label{tab:Tab3}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccccc@{\extracolsep{\fill}}}
+\hline\hline
+            \textit{Dependent Variable:}&\multicolumn{1}{c}{Base}&\multicolumn{1}{c}{Colonized}&\multicolumn{1}{c}{Without}&\multicolumn{1}{c}{Without}&\multicolumn{1}{c}{Continent}&\multicolumn{1}{c}{Without}&\multicolumn{1}{c}{Controlling}&\multicolumn{1}{c}{Controlling}&\multicolumn{1}{c}{Control. for}\\
+            \textit{Avg. EFW}&\multicolumn{1}{c}{Sample}&\multicolumn{1}{c}{Post-1850}&\multicolumn{1}{c}{Africa}&\multicolumn{1}{c}{Americas}&\multicolumn{1}{c}{Dummies}&\multicolumn{1}{c}{``Neo-Europes''}&\multicolumn{1}{c}{for Location}&\multicolumn{1}{c}{for Timing}&\multicolumn{1}{c}{Mult. Colonizers}\\
+            \textit{(2000-2019)}&\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}&\multicolumn{1}{c}{(9)}\\
+\hline
+HIEL Colonizer &       0.716\sym{***}&       0.606\sym{**} &       0.282         &       0.650\sym{***}&       0.456\sym{**} &       0.575\sym{***}&       0.615\sym{***}&       0.626\sym{***}&       0.706\sym{***}\\
+            &     (0.193)         &     (0.240)         &     (0.278)         &     (0.203)         &     (0.193)         &     (0.183)         &     (0.175)         &      (0.177)         &     (0.197)         \\
+[0.125em]
+America dummy     &                     &                     &                     &                     &      -0.574         &                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.569)         &                     &                     &                     &                     \\
+[0.125em]
+Africa dummy      &                     &                     &                     &                     &      -1.336\sym{***}&                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.562)         &                     &                     &                     &                     \\
+[0.125em]
+Asia dummy        &                     &                     &                     &                     &      -0.772         &                     &                     &                     &                     \\
+            &                     &                     &                     &                     &     (0.566)         &                     &                     &                     &                     \\
+[0.125em]
+Abs. Latitude    &                     &                     &                     &                     &                     &                     &       1.263 &                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (0.939)         &                     &                     \\
+[0.125em]
+Landlocked    &                     &                     &                     &                     &                     &                     &       0.306         &                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (0.240)         &                     &                     \\
+[0.125em]
+Island    &                     &                     &                     &                     &                     &                     &       1.075\sym{***}&                     &                     \\
+            &                     &                     &                     &                     &                     &                     &     (0.240)         &                     &                     \\
+[0.125em]
+Independ. Year &                     &                     &                     &                     &                     &                     &                     &    -0.005         &                     \\
+            &                     &                     &                     &                     &                     &                     &                     &   (0.005)         &                     \\
+[0.125em]
+Year of $1^{st}$ Colonizer      &                     &                     &                     &                     &                     &                     &                     &    -0.002\sym{***}&                     \\
+            &                     &                     &                     &                     &                     &                     &                     &  (0.000)         &                     \\
+[0.125em]
+Multiple Colonizers    &                     &                     &                     &                     &                     &                     &                     &                     &       0.152         \\
+            &                     &                     &                     &                     &                     &                     &                     &                     &     (0.179)         \\ \hline
+\(N\)       &          87         &          58         &          39         &          79         &          87         &          84         &          70         &          87         &          87         \\
+\(R^{2}\)   &       0.154         &       0.099         &       0.024         &       0.130         &       0.283         &       0.111         &       0.422         &       0.225         &       0.159         \\ \hline\hline
+\end{tabular*}
+\begin{tablenotes}
+\small
+\item \textit{Notes}: Robust standard errors in parenthesis. *, **, and *** indicate statistical significance at the 10, 5, and 1\% levels, respectively. Dependent variable is the average \textit{Economic Freedom of the World} (EFW) Index score in the 2000-2019 period. The scores range from 0 to 10. HIEL Colonizer is the average HIEL score (starting in 1850) of the colonizer(s) during the period of colonization. Base sample includes colonies that got independence after 1850. Column (2) considers only countries that were colonized post-1850 to avoid averages with missing HIEL scores. Column (6) excludes Australia, Canada, New Zealand from the sample. Column (9) includes a dummy for countries that had multiple colonizers.
+\end{tablenotes}
+\end{minipage}
+\end{center}
+\end{threeparttable}
+\end{sidewaystable}
+
