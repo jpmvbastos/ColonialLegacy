@@ -2,7 +2,6 @@
 
 cd "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/"
 
-
 import excel "Data/colonies.xlsx", sheet("Sheet1") firstrow clear
 
 merge 1:1 country_code using "Data/AJRRevFortune.dta"
@@ -94,7 +93,6 @@ replace colonizer=8 if f_spain==1
 * Errors in Acemoglu (coded as Portuguese)
 replace colonizer=6 if country=="Suriname"
 replace colonizer=8 if country=="Philippines"
-
 
 
 * Macbook Air
