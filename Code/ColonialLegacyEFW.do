@@ -17,10 +17,10 @@ rename avg_efw efw_colonizer
 rename efw avg_efw
 
 gen time_indep = 2000-year_independence
-gen lag_efw = efw_year - year_independence
+*gen lag_efw = efw_year - year_independence
 gen centuries = time_total/100
-gen diff = efw_year - year_independence
-gen delta_efw = efw_2019 - efw_indep
+gen diff = efw_indep_year - year_independence
+*gen delta_efw = efw_2019 - efw_indep
 
 replace simultaneous = 0 if simultaneous ==.
 replace time_total = time_total - simultaneous
@@ -161,7 +161,7 @@ eststo: reg avg_efw centuries i.colonizer if africa!=1, vce(robust)
 eststo:reg avg_efw centuries  i.colonizer if america!=1, vce(robust)
 
 *---Column 5: With continent dummies
-eststo:reg avg_efw centuries  i.colonizer  america africa asia, vce(robust)
+eststo:reg avg_efw centuries  i.colonizer america africa asia, vce(robust)
 
 *---Column 6: Without neo-Europes
 eststo: reg avg_efw centuries  i.colonizer if rich4!=1, vce(robust)
