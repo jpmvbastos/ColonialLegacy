@@ -9,18 +9,18 @@ merge 1:1 country_code using "Data/AJRRevFortune.dta"
 drop _merge ISO_Code_2 Countries ISO_Code_3 closest
 drop if _n>128
 
-drop if efw==.
+drop if avg_efw==.
 
 rename independence year_independence
 rename time_indep time_indep_interim
-rename avg_efw efw_colonizer 
-rename efw avg_efw
 
 gen time_indep = 2000-year_independence
 *gen lag_efw = efw_year - year_independence
 gen centuries = time_total/100
 gen diff = efw_indep_year - year_independence
 *gen delta_efw = efw_2019 - efw_indep
+gen gap = 2019 - year_independence
+gen postwar = (year_independence > 1945)
 
 replace simultaneous = 0 if simultaneous ==.
 replace time_total = time_total - simultaneous
@@ -30,6 +30,8 @@ replace multiple = 1 if ncolonizers > 1
 
 encode main, gen(long_colonizer) /* Longest */
 encode main, gen(colonizer) 
+encode first_hiel_colonizer, gen(first_colonizer)
+encode indep_from, gen(colonizer_indep)
 
 * Countries with indep since 1940 and that gained EFW score within 10 years
 gen late = 0
@@ -94,6 +96,12 @@ replace colonizer=8 if f_spain==1
 replace colonizer=6 if country=="Suriname"
 replace colonizer=8 if country=="Philippines"
 
+merge 1:1 country_code using "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/Data/share-euro-giuliano-nunn.dta",
+
+label var euro_share "Prevalence of European Settlers (Easterly and Levine, 2016)"
+label var share_euro "Share population speaking a North-Eurasian language (Giuliano & Nunn, 2018)"
+
+drop Entity year _merge
 
 * Macbook Air
 save "Data/ColonialEFW.dta", replace
@@ -375,8 +383,6 @@ test goldm = iron =  silv = zinc = oilres = 0
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/TableB4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 
-
-
 
 
 *---Table B5: Delta EFW: Robustness for Late Independence
