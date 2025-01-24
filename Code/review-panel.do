@@ -1,11 +1,10 @@
 *** Colonial Rule and Economic Freedom
 
-*| Panel Data Summary Statistics 
-
-*---Table 7: Persistence
-
 cd "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/"
 use  "Data/ColonialEFW_Panel.dta", clear
+
+*---Table 6: Persistence
+
 
 eststo clear
 

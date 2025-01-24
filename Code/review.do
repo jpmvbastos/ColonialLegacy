@@ -198,12 +198,12 @@ ruggedness  lpd1500s, cluster(colonizer)
 eststo: reg avg_efw efw_colonizer share_euro america africa asia lat_abst landlock island ///
 				ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
-				oilres legor_fr legor_uk, cluster(colonizer) 
+				oilres legor_fr legor_uk i.colonizer, cluster(colonizer) 
 
 * Multiplicative 
 eststo: reg avg_efw c.efw_colonizer##c.share_euro, cluster(colonizer)
 eststo: reg avg_efw c.efw_colonizer##c.share_euro america africa asia lat_abst landlock island ///
-ruggedness logem4 lpd1500s, cluster(colonizer) 
+ruggedness lpd1500s, cluster(colonizer) 
 eststo: reg avg_efw c.efw_colonizer##c.share_euro america africa asia lat_abst landlock island ///
 				ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
@@ -219,7 +219,7 @@ eststo clear
 * Additive 
 eststo: reg avg_efw efw_colonizer share_euro2, cluster(colonizer)
 eststo: reg avg_efw efw_colonizer share_euro2 america africa asia lat_abst landlock island ///
-ruggedness logem4 lpd1500s, cluster(colonizer) 
+ruggedness lpd1500s, cluster(colonizer) 
 eststo: reg avg_efw efw_colonizer share_euro2 america africa asia lat_abst landlock island ///
 				ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
@@ -232,7 +232,7 @@ ruggedness  lpd1500s, cluster(colonizer)
 eststo: reg avg_efw c.efw_colonizer##c.share_euro2 america africa asia lat_abst landlock island ///
 				ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
-				oilres legor_fr legor_uk, cluster(colonizer) 
+				oilres legor_fr legor_uk i.colonizer, cluster(colonizer) 
 
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Review/Table6C.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2  
@@ -383,7 +383,7 @@ esttab using "`path'/Results/Review/TableB3.tex", replace star(* 0.10 ** 0.05 **
 
 
 
-*--- Table C5: Population Weighted
+*--- Table C4: Population Weighted
 eststo clear
 
 *---Column 1: Base Sample	
@@ -395,7 +395,12 @@ eststo:reg avg_efw efw_colonizer america africa asia lat_abst landlock island [i
 *---Column 3: Controlling for pre-colonial characteristics
 eststo: reg avg_efw efw_colonizer america africa asia lat_abst landlock island ///
  ruggedness logem4 lpd1500s humid* temp* steplow  deslow stepmid desmid drystep ///
- hiland drywint goldm iron silv zinc oilres i.colonizer [iweight=pop], cluster(colonizer) 
+ hiland drywint goldm iron silv zinc oilres i.colonizer [iweight=pop], cluster(colonizer)
+ 
+ test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
+test goldm = iron =  silv = zinc = oilres = 0 
 				
 *---Column 4: Including legal origins
 eststo:reg avg_efw efw_colonizer america africa asia lat_abst landlock island ///
@@ -403,8 +408,13 @@ ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
 				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
 				oilres legor_fr legor_uk i.colonizer [iweight=pop], cluster(colonizer) 
 				
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
+test goldm = iron =  silv = zinc = oilres = 0 
+				
 local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
-esttab using "`path'/Results/Review/TableC5.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
+esttab using "`path'/Results/Review/TableC4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
 
 
 /* NOT USING: 

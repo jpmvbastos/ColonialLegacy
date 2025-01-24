@@ -197,6 +197,87 @@ regsensitivity breakdown avg_efw hiel_share_euro2 share_euro2 efw_colonizer $w1 
 	
 
 
+*** Table 7:
+
+cd "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/"
+use  "Data/ColonialEFW_Panel.dta", clear
+
+global full_indep "time year ruggedness logem4 lpd1500s humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint goldm iron silv zinc oilres legor_fr legor_uk i.colonizer_indep i.year"
+
+global full_avg "time year ruggedness logem4 lpd1500s humid* temp* steplow  deslow stepmid desmid  drystep hiland drywint goldm iron silv zinc oilres legor_fr legor_uk i.colonizer i.year"
+
+gen indep_time = hiel_indep * time
+gen avg_time = efw_colonizer* time
+
+** Oster (2019)
+
+* Column 3
+
+* HIEL Indep
+regsensitivity breakdown efw hiel_indep indep_time $w1 $full_indep if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw indep_time hiel_indep  $w1 $full_indep if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+
+* Column 5
+
+* HIEL Indep
+regsensitivity breakdown efw efw_colonizer avg_time time year $w1 $baseline ///
+	if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw avg_time efw_colonizer time year $w1 $baseline ///
+	if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+	
+* Column 6 
+
+* HIEL Indep
+regsensitivity breakdown efw efw_colonizer avg_time $w1 $full_avg if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw avg_time efw_colonizer $w1 $full_avg if year>year_indep, compare($w1) ///
+	oster rlong(1.3, relative) 
+	
+*-- DMP (2022)
+* 1) Rybar = + inf, c=(0.25, 0.5, 0.75, 1)
+
+* Column 3
+
+* HIEL Indep
+regsensitivity breakdown efw hiel_indep indep_time $w1 $full_indep if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw indep_time hiel_indep  $w1 $full_indep if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+
+* Column 5
+
+* HIEL Indep
+regsensitivity breakdown efw efw_colonizer avg_time time year $w1 $baseline ///
+	if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+	
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw avg_time efw_colonizer time year $w1 $baseline ///
+	if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+	
+* Column 6
+
+* HIEL Indep
+regsensitivity breakdown efw efw_colonizer avg_time $w1 $full_avg if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+
+* HIEL Indep X Years since Indep  
+regsensitivity breakdown efw avg_time efw_colonizer $w1 $full_avg if year>year_indep, compare($w1) ///
+	cbar(0.25(0.25)1)
+
 	
 	
 	

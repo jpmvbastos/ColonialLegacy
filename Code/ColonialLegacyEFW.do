@@ -101,6 +101,8 @@ merge 1:1 country_code using "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy/
 label var euro_share "Prevalence of European Settlers (Easterly and Levine, 2016)"
 label var share_euro "Share population speaking a North-Eurasian language (Giuliano & Nunn, 2018)"
 
+drop if country==""
+
 drop Entity year _merge
 
 * Macbook Air
