@@ -5,6 +5,7 @@ use  "Data/ColonialEFW_Panel.dta", clear
 
 *---Table 6: Persistence
 
+gen hiel_indep_time = hiel_indep*time
 
 eststo clear
 
@@ -29,7 +30,7 @@ eststo: reg efw c.hiel_indep##c.time year america africa asia lat_abst landlock 
 eststo: reg efw c.efw_colonizer##c.time year i.year if year >= year_independence, cluster(colonizer) 
 
 *---Column 5: Baseline
-eststo: reg efw c.efw_colonizer##c.time year america africa asia lat_abst landlock island ///
+eststo: reg efw avg_time time efw_colonizer year america africa asia lat_abst landlock island ///
 	ruggedness logem4 lpd1500s i.year if year >= year_independence, cluster(colonizer)
 	
 *---Column 6: Baseline + Full

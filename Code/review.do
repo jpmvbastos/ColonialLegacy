@@ -382,6 +382,40 @@ local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Review/TableB3.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
 
 
+*--- Table B4: 
+eststo clear
+
+*---Column 1: Base Sample	
+eststo:reg avg_efw efw_colonizer, cluster(long_colonizer)
+
+*---Column 2: Contrlling for Location
+eststo:reg avg_efw efw_colonizer america africa asia lat_abst landlock island, cluster(long_colonizer) 
+
+*---Column 3: Controlling for pre-colonial characteristics
+eststo: reg avg_efw efw_colonizer america africa asia lat_abst landlock island ///
+ ruggedness logem4 lpd1500s humid* temp* steplow  deslow stepmid desmid drystep ///
+ hiland drywint goldm iron silv zinc oilres i.long_colonizer, cluster(long_colonizer) 
+			
+				
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
+test goldm = iron =  silv = zinc = oilres = 0 
+
+*---Column 4: Including legal origins
+eststo:reg avg_efw efw_colonizer america africa asia lat_abst landlock island ///
+ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
+				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
+				oilres legor_fr legor_uk i.long_colonizer, cluster(long_colonizer) 
+
+test  humid1 = humid2 = humid3 = humid4 = 0
+test  temp1 = temp2 =temp3 = temp4 = temp5 = 0  
+test steplow = deslow = stepmid = desmid = drystep = hiland = drywint = 0
+test goldm = iron =  silv = zinc = oilres = 0 
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Review/TableB4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
+
 
 *--- Table C4: Population Weighted
 eststo clear
@@ -545,15 +579,15 @@ list country avg_efw efw_colonizer year_indep first multiple legor_uk legor_ge i
 list country avg_efw efw_colonizer efw_britain colstart_britain colend_britain year_indep first multiple legor_uk if country=="Zimbabwe" | country=="South Africa"
 
 * Niger -> Mali -> Burkina Faso -> Benin
-list country avg_efw efw_colonizer efw_france colstart_france colend_france year_indep first multiple legor_fr if country=="Niger" | country=="Burkina Faso" | country=="Mali" | country=="Benin"
+list country avg_efw efw_colonizer colstart_france logem4 lpd1500s first euro_share share_euro legor_fr if country=="Niger" | country=="Burkina Faso" | country=="Mali" | country=="Benin"| country=="Senegal" 
 
 list country avg_efw efw_colonizer  logem4 lpd1500s  if country=="Niger" | country=="Burkina Faso" | country=="Mali" | country=="Benin"
 
 
 
 
-twoway (scatter avg_efw efw_colonizer if colonizer==2 country!="Morocco" & country!="Lebanon", mlabel(country)) ///
-	   (lfit avg_efw efw_colonizer if colonizer==2 &country!="Morocco" & country!="Lebanon")
+twoway (scatter avg_efw efw_colonizer if colonizer==3 & country!="Morocco" & country!="Lebanon", mlabel(country)) ///
+	   (lfit avg_efw efw_colonizer if colonizer==3 & country!="Morocco" & country!="Lebanon")
 
 
 *
