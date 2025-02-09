@@ -307,7 +307,7 @@ regsensitivity breakdown efw avg_time efw_colonizer time $full_avg ///
 	cbar(0.25(0.25)1)
 
 
-log close 
+*log close 
 
 /**** TABLE 4
 
