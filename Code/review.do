@@ -451,6 +451,51 @@ local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
 esttab using "`path'/Results/Review/TableC4.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
 
 
+* Table C5: Marginal Effect of Economic Freedom
+
+reg efw_colonizer rule_colonizer, vce(robust)
+predict resid_ruleoflaw if e(sample), resid
+
+reg efw_colonizer jucon_colonizer, vce(robust)
+predict resid_constraints if e(sample), resid
+
+reg efw_colonizer polyarchy_colonizer, vce(robust)
+predict resid_polyarchy if e(sample), resid
+
+reg efw_colonizer libdem_colonizer, vce(robust)
+predict resid_libdem if e(sample), resid
+
+reg efw_colonize polyarchy_colonizer libdem_colonizer rule_colonizer ///
+	jucon_colonizer, vce(robust)
+predict resid_all if e(sample), resid
+
+foreach v in ruleoflaw constraints polyarchy libdem all {
+	
+eststo clear 
+	
+*---Column 1: Base Sample	
+eststo:reg avg_efw resid_`v', cluster(colonizer)
+
+*---Column 2: Contrlling for Location
+eststo:reg avg_efw resid_`v' america africa asia lat_abst landlock island, cluster(colonizer) 
+
+*---Column 3: Controlling for pre-colonial characteristics
+eststo: reg avg_efw resid_`v' america africa asia lat_abst landlock island ///
+ ruggedness logem4 lpd1500s humid* temp* steplow  deslow stepmid desmid drystep ///
+ hiland drywint goldm iron silv zinc oilres i.colonizer, cluster(colonizer)
+				
+*---Column 4: Including legal origins
+eststo:reg avg_efw resid_`v' america africa asia lat_abst landlock island ///
+ruggedness logem4 lpd1500s humid* temp* steplow  deslow ///
+				stepmid desmid  drystep hiland drywint goldm iron silv zinc ///
+				oilres legor_fr legor_uk i.colonizer, cluster(colonizer) 
+
+local path "/Users/jpmvbastos/Documents/GitHub/ColonialLegacy"
+esttab using "`path'/Results/Review/TableC5-`v'.tex", replace star(* 0.10 ** 0.05 *** 0.01) se r2 	
+}
+
+
+
 /* NOT USING: 
 
 * Persistence
@@ -594,3 +639,13 @@ twoway (scatter avg_efw efw_colonizer if colonizer==3 & country!="Morocco" & cou
 twoway (scatter avg_efw efw_colonizer, colorvar(colonizer) colordiscrete ///     
              colorrule(phue) zlabel(, valuelabel) coloruseplegend) ///
        (lfit avg_efw efw_colonizer), legend(off) ///
+
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
