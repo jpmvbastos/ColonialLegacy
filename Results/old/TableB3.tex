@@ -1,0 +1,50 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{6}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}\\
+            &\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{efw\_indep}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{efw\_indep}&\multicolumn{1}{c}{avg\_efw}&\multicolumn{1}{c}{avg\_efw}\\
+\hline
+efw\_colonizer&       0.668\sym{***}&       1.406\sym{***}&                     &                     &       0.714\sym{***}&       0.905\sym{***}\\
+            &     (0.191)         &     (0.409)         &                     &                     &     (0.176)         &     (0.312)         \\
+[1em]
+lpd1500s    &      -0.236\sym{***}&      -0.115         &      -0.195\sym{***}&      -0.108         &                     &                     \\
+            &    (0.0597)         &     (0.117)         &    (0.0650)         &     (0.126)         &                     &                     \\
+[1em]
+centuries   &                     &                     &       0.213\sym{***}&       0.256\sym{**} &       0.179\sym{**} &       0.932         \\
+            &                     &                     &    (0.0799)         &     (0.119)         &    (0.0679)         &     (0.873)         \\
+[1em]
+2.colonizer &                     &                     &           0         &           0         &                     &                     \\
+            &                     &                     &         (.)         &         (.)         &                     &                     \\
+[1em]
+3.colonizer &                     &                     &      -0.590\sym{***}&      -1.159\sym{***}&                     &                     \\
+            &                     &                     &     (0.216)         &     (0.252)         &                     &                     \\
+[1em]
+4.colonizer &                     &                     &     -0.0680         &      -0.697         &                     &                     \\
+            &                     &                     &     (0.368)         &     (0.447)         &                     &                     \\
+[1em]
+5.colonizer &                     &                     &      -1.289\sym{***}&                     &                     &                     \\
+            &                     &                     &     (0.246)         &                     &                     &                     \\
+[1em]
+6.colonizer &                     &                     &      -0.518         &      -1.097\sym{**} &                     &                     \\
+            &                     &                     &     (0.465)         &     (0.486)         &                     &                     \\
+[1em]
+7.colonizer &                     &                     &      -1.145\sym{***}&                     &                     &                     \\
+            &                     &                     &     (0.271)         &                     &                     &                     \\
+[1em]
+8.colonizer &                     &                     &     -0.0593         &                     &                     &                     \\
+            &                     &                     &     (0.295)         &                     &                     &                     \\
+[1em]
+c.efw\_colonizer#c.centuries&                     &                     &                     &                     &                     &      -0.102         \\
+            &                     &                     &                     &                     &                     &     (0.117)         \\
+[1em]
+\_cons      &       1.391         &      -5.367\sym{*}  &       6.335\sym{***}&       5.339\sym{***}&       0.742         &      -0.666         \\
+            &     (1.438)         &     (3.050)         &     (0.240)         &     (0.321)         &     (1.290)         &     (2.300)         \\
+\hline
+\(N\)       &          66         &          43         &          86         &          43         &          87         &          87         \\
+\(R^{2}\)   &       0.349         &       0.336         &       0.377         &       0.529         &       0.209         &       0.216         \\
+\hline\hline
+\multicolumn{7}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{7}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+}
